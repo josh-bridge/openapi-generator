@@ -48,7 +48,7 @@ public abstract class AbstractKotlinCodegen extends DefaultCodegen implements Co
     public enum SERIALIZATION_LIBRARY_TYPE {moshi, gson, jackson, kotlinx_serialization}
 
     public static final String MODEL_MUTABLE = "modelMutable";
-    public static final String MODEL_MUTABLE_DESC = "Create mutable models";
+    public static final String MODEL_MUTABLE_DESC = "Force mutable models";
 
     private final Logger LOGGER = LoggerFactory.getLogger(AbstractKotlinCodegen.class);
 
@@ -938,5 +938,15 @@ public abstract class AbstractKotlinCodegen extends DefaultCodegen implements Co
         }
 
         return null;
+    }
+
+    @Override
+    public String toDefaultParameterValue(final Schema<?> schema) {
+        Object defaultValue = schema.getDefault();
+        if (defaultValue == null) {
+            return null;
+        }
+        // escape quotes
+        return defaultValue.toString().replace("\"", "\\\"");
     }
 }
